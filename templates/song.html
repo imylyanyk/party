@@ -1,0 +1,10 @@
+{% macro song_item(song) %}
+<li class="list-group-item">
+    {{ song['artist'] }} :: {{ song['title'] }}
+    <div class="votes pull-right">
+        <button class="btn btn-xs btn-default"><span class="glyphicon glyphicon-thumbs-down"></span> Down</button>
+        <span class="badge">{{ song['votes'] }}</span>
+        <button class="btn btn-xs btn-primary"><span class="glyphicon glyphicon-thumbs-up"></span> Up</button>
+    </div>
+</li>
+{% endmacro %}
