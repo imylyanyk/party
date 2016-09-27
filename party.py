@@ -4,6 +4,7 @@ import pyrebase
 from googleapiclient.errors import HttpError
 import auth
 from config import firebase_config, youtube_config
+from youtube_helpers import youtube_flow, get_token
 # How to !
 # https://www.digitalocean.com/community/tutorials/how-to-structure-large-flask-applications
 
@@ -18,7 +19,8 @@ firebase = pyrebase.initialize_app(firebase_config)
 
 @app.route('/')
 def hello_world():
-    return 'Hello World!'
+    auth_url = youtube_flow.step1_get_authorize_url()
+    return render_template("index.html", youtube_auth=auth_url)
 
 
 @app.route('/name/<name>')
@@ -26,18 +28,12 @@ def index_name(name):
     cur_party = 1
     songs = firebase.database().child('parties/0/songs').get()
     songs = songs.val()
-    auth_url = "https://accounts.google.com/o/oauth2/auth?\
-client_id={0}&\
-scope=https//www.googleapis.com/auth/youtube&\
-redirect_uri=http//127.0.0.1:5000/oauth2callback&\
-response_type=code&\
-access_type=offline".format(youtube_config["clientId"])
-    return render_template("index.html", name=name, songs=songs, auth_url=auth_url)
+    return render_template("name.html", name=name, songs=songs)
 
 
 @app.route('/oauth2callback')
-def handle_auth(data):
-    return str(request.args)
+def handle_auth():
+    get_token(request.args.get('code'))
 
 
 @app.route('/add')
@@ -57,4 +53,6 @@ def ajax_search():
 
 
 if __name__ == '__main__':
+    import uuid
+    app.secret_key = str(uuid.uuid4())
     app.run(debug=True, use_debugger=True)

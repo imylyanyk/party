@@ -1,19 +1,11 @@
 {% extends "layout.html" %}
-{% from "song.html" import song_item %}
 {% block body %}
     <div class="container">
         <div class="row">
-            <div class="col-lg-4 col-xs-12">
-                <ul class="list-group">
-                {% for song in songs %}
-                    {{ song_item(song) }}
-                {% endfor %}
-                </ul>
+            <div class="col-xs-6">
+                <a class="btn btn-primary" href="{{ youtube_auth }}">Owner</a>
+                <a class="btn btn-default" href="#">Guest</a>
             </div>
-        <div class="col-xs-6">
-            THIS IS BODY, {{ name }}!
-            <a class="btn btn-primary" href="{{ auth_url }}">Auth v. Youtube</a>
-        </div>
         </div>
     </div>
 {% endblock %}
