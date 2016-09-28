@@ -27,7 +27,7 @@ youtube_flow = client.flow_from_clientsecrets(
 
 
 def get_credentials_from_session():
-    credentials = client.OAuth2Credentials.from_json(flask.session['credentials'])
+    credentials = client.OAuth2Credentials.from_json(flask.session['youtube_credentials'])
     return credentials
 
 

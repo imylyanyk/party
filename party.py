@@ -4,7 +4,7 @@ import pyrebase
 from googleapiclient.errors import HttpError
 import auth
 from config import firebase_config, youtube_config
-from youtube_helpers import youtube_flow, get_token
+from youtube_helpers import youtube_flow, get_token, get_auth_youtube_obj
 # How to !
 # https://www.digitalocean.com/community/tutorials/how-to-structure-large-flask-applications
 
@@ -31,9 +31,19 @@ def index_name(name):
     return render_template("name.html", name=name, songs=songs)
 
 
+@app.route('/dashboard')
+def dashboard():
+    yt = get_auth_youtube_obj()
+    data = yt.channels().list(part='snippet', mine=True).execute()
+    name = data['items'][0]['snippet']['title']
+    print(name)
+    return render_template('dashboard.html', name = name)
+
+
 @app.route('/oauth2callback')
 def handle_auth():
     get_token(request.args.get('code'))
+    return redirect(url_for('dashboard'))
 
 
 @app.route('/add')
